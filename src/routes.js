@@ -6,6 +6,7 @@ import NotifyContainer from './components/notify-container';
 
 import Main from './app/main';
 import List from './app/list';
+import Meetings from './app/meetings'
 
 export default function Routes() {
     return (
@@ -15,6 +16,7 @@ export default function Routes() {
             <Switch>
                 <Route path='/' exact><Main /></Route>
                 <Route path='/lista'><List /></Route>
+                <Route path='/reuniao'><Meetings /></Route>
             </Switch>
         </>
     );

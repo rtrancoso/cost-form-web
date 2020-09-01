@@ -99,13 +99,55 @@ label {
 	font-weight: 700;
 }
 
-input {
+input,
+.select {
 	width: 100%;
 	padding: 12px 10px;
 	margin: 5px 0;
 	display: inline-block;
 	border: 1px solid #ccc;
 	box-sizing: border-box;
+}
+
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	appearance: none;
+	outline: 0;
+	box-shadow: none;
+	border: 0 !important;
+	background-image: none;
+	flex: 1;
+	cursor: pointer;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+	display: none;
+}
+
+/* Custom Select */
+.select {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+/* Arrow */
+.select::after {
+	content: "\25BC";
+	position: absolute;
+	right: 0;
+	padding: 0 1em;
+	cursor: pointer;
+	pointer-events: none;
+	-webkit-transition: 0.25s all ease;
+	-o-transition: 0.25s all ease;
+	transition: 0.25s all ease;
+}
+/* Transition */
+.select:hover::after {
+	color: #4caf50;
 }
 
 button {
@@ -154,6 +196,22 @@ table th {
 	color: white;
 }
 
+table .table-actions {
+	text-align: center;
+	width: 50px;
+	white-space: nowrap;
+}
+
+table .table-actions img {
+	color: black;
+	margin-right: 8px;
+	cursor: pointer;
+}
+
+table .table-actions img:last-child {
+	margin-right: 0;
+}
+
 .content,
 .form,
 .form-box,
@@ -200,7 +258,7 @@ table th {
 
 @media (max-width: 768px) {
 	.form-box,
-	.list-box  {
+	.list-box {
 		padding: 5px;
 	}
 }

@@ -8,21 +8,33 @@ import api from '../services/api';
 function Main() {
 
     const [name, setName] = useState('');
-    const [rest, setRest] = useState('');
-    const [full, setFull] = useState('');
+    const [meeting, setMeeting] = useState('')
+    const [meetings, setMeetings] = useState([])
+    const [rest, setRest] = useState('--');
+    const [full, setFull] = useState('--');
     const [result, setResult] = useState(false);
 
     useEffect(() => {
-        const getStores = async () => {
-            const response = await api.get('/status');
-            setRest(response.rest);
-            setFull(response.full);
+        const getMeetings = async () => {
+            const response = await api.get(`/meetings/active`);
+            setMeetings(response);
         }
-        getStores();
+        getMeetings();
     }, []);
 
+    useEffect(() => {
+        const getStatus = async () => {
+            if (meeting) {
+                const response = await api.get(`/meetings/${meeting}/status`);
+                setRest(response.rest);
+                setFull(response.full);
+            }
+        }
+        getStatus();
+    }, [meeting]);
+
     const confirm = async () => {
-        await api.post('/confirm', { nome: name });
+        await api.post('/confirm', { nome: name, reuniao: { id: meeting } });
         setResult(true);
     }
 
@@ -44,11 +56,17 @@ function Main() {
                         <span className="vagas">{rest}/{full}</span>
                         </div>
                         <div className="title">
-                            <span>Garanta sua vaga!! informe seu nome completo no formuário abaixo.</span>
+                            <span>Garanta sua vaga!! informe qual reunião e seu nome completo no formuário abaixo.</span>
                         </div>
                         <div className="fields">
+                            <div className="select">
+                                <select value={meeting} onChange={e => setMeeting(e.target.value)} required>
+                                    <option value="" defaultValue>Selecione</option>
+                                    {meetings.map((item, key) => (<option key={key} value={item.id}>{item.descricao}</option>))}
+                                </select>
+                            </div>
                             <input type="text" name="fname" placeholder="Nome completo" value={name} onChange={e => setName(e.target.value)} required />
-                            <button type="submit" onClick={() => confirm()} disabled={rest <= 0}>Confirmar Presença</button>
+                            <button type="submit" onClick={() => confirm()} disabled={(rest <= 0) || !meeting || !name || !(name.trim())}>Confirmar Presença</button>
                         </div>
                     </>) : (<>
                         <div className="title">

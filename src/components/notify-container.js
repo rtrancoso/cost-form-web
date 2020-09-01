@@ -17,6 +17,7 @@ function UUID() {
             r = (d2 + r) % 16 | 0;
             d2 = Math.floor(d2 / 16);
         }
+        // eslint-disable-next-line no-mixed-operators
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
@@ -24,19 +25,18 @@ function UUID() {
 export default function NotifyContainer() {
     const [notifies, setNotifies] = useState([]);
 
-    const addNotify = (config) => {
-        let uuid = UUID();
-        setNotifies(notifies => [...notifies, Object.assign(config, { uuid })]);
-        setTimeout(() => remNotify(uuid), 3000);
-    }
-
     const remNotify = (uuid) => {
-        setNotifies(notifies => notifies.filter(notify => notify.uuid != uuid));
+        setNotifies(notifies => notifies.filter(notify => notify.uuid !== uuid));
     }
 
     useEffect(() => {
+        const addNotify = (config) => {
+            let uuid = UUID();
+            setNotifies(notifies => [...notifies, Object.assign(config, { uuid })]);
+            setTimeout(() => remNotify(uuid), 3000);
+        }
         EventEmitter.subscribe('notify', addNotify);
-    }, [addNotify]);
+    }, []);
 
     return (
         <div className="notify-container">
