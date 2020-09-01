@@ -34,7 +34,7 @@ function Main() {
     }, [meeting]);
 
     const confirm = async () => {
-        await api.post('/confirm', { nome: name, reuniao: { id: meeting } });
+        await api.post(`/meetings/${meeting}/confirm`, { nome: name, reuniao: { id: meeting } });
         setResult(true);
     }
 

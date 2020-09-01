@@ -6,15 +6,27 @@ import logo from '../assets/images/cost-logo.png';
 import api from '../services/api';
 
 function List() {
+    const [meeting, setMeeting] = useState('')
+    const [meetings, setMeetings] = useState([])
     const [result, setResult] = useState([]);
 
     useEffect(() => {
+        const getMeetings = async () => {
+            const response = await api.get(`/meetings`);
+            setMeetings(response);
+        }
+        getMeetings();
+    }, []);
+
+    useEffect(() => {
         const getList = async () => {
-            const response = await api.get('/list');
-            setResult(response);
+            if (meeting) {
+                const response = await api.get(`/meetings/${meeting}/list`);
+                setResult(response);
+            }
         }
         getList();
-    }, []);
+    }, [meeting]);
 
     return (
         <div className="content">
@@ -24,6 +36,12 @@ function List() {
                         <img src={logo} alt="COST" width="250" />
                     </div>
                     <hr />
+                    <div className="select">
+                        <select value={meeting} onChange={e => setMeeting(e.target.value)} required>
+                            <option value="" defaultValue>Selecione</option>
+                            {meetings.map((item, key) => (<option key={key} value={item.id}>{item.descricao}</option>))}
+                        </select>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -38,7 +56,7 @@ function List() {
                                     <td>{item.id}</td>
                                     <td>{Moment(item.dataConfirmacao).format('DD/MM/YYYY HH:mm:ss')}</td>
                                     <td>{item.nome}</td>
-                                </tr>    
+                                </tr>
                             ))}
                         </tbody>
                     </table>
