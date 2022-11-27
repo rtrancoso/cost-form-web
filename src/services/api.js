@@ -22,7 +22,7 @@ api.interceptors.response.use(response => {
     if (!error.response) {
         NotifyControl.danger('Error', 'Unexpected error');
     } else {
-        NotifyControl.danger('Error', error.response.data);
+        NotifyControl.danger('Error', JSON.stringify(error.response.data));
     }
     throw new Error(error);
 })

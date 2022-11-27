@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import logo from '../assets/images/cost-logo.png';
+import logo from '../assets/images/cost-logo.jpg';
 import party from '../assets/images/party-icon.png';
 
 import api from '../services/api';
@@ -10,31 +10,20 @@ function Main() {
     const [name, setName] = useState('');
     const [meeting, setMeeting] = useState('')
     const [meetings, setMeetings] = useState([])
-    const [rest, setRest] = useState('--');
-    const [full, setFull] = useState('--');
     const [result, setResult] = useState(false);
 
     useEffect(() => {
         const getMeetings = async () => {
-            const response = await api.get(`/meetings/active`);
-            setMeetings(response);
+            try {
+                const response = await api.get(`/meetings/active`);
+                setMeetings(response);
+            } catch (error){}
         }
         getMeetings();
     }, []);
 
-    useEffect(() => {
-        const getStatus = async () => {
-            if (meeting) {
-                const response = await api.get(`/meetings/${meeting}/status`);
-                setRest(response.rest);
-                setFull(response.full);
-            }
-        }
-        getStatus();
-    }, [meeting]);
-
     const confirm = async () => {
-        await api.post(`/meetings/${meeting}/confirm`, { nome: name, reuniao: { id: meeting } });
+        await api.post(`/meetings/${meeting}/confirm`, { name: name, meeting: { id: meeting } });
         setResult(true);
     }
 
@@ -48,14 +37,6 @@ function Main() {
                     <hr />
                     {!result ? (<>
                         <div className="title">
-                            <h2>Estamos voltando a reunir!!! <img src={party} alt="Party" width="30" /></h2>
-                            <span>Devido ao cenário em que estamos inserido, uma pandemia, o número de pessoas que podem participar dos cultos está reduzido, com isso estamos fazendo um sistema de confirmação de presença.</span>
-                        </div>
-                        <div className="counter">
-                            Vagas disponíves:
-                        <span className="vagas">{rest}/{full}</span>
-                        </div>
-                        <div className="title">
                             <span>Garanta sua vaga!! informe qual reunião e seu nome completo no formuário abaixo.</span>
                         </div>
                         <div className="fields">
@@ -66,7 +47,7 @@ function Main() {
                                 </select>
                             </div>
                             <input type="text" name="fname" placeholder="Nome completo" value={name} onChange={e => setName(e.target.value)} required />
-                            <button type="submit" onClick={() => confirm()} disabled={(rest <= 0) || !meeting || !name || !(name.trim())}>Confirmar Presença</button>
+                            <button type="submit" onClick={() => confirm()} disabled={!meeting || !name || !(name.trim())}>Confirmar Presença</button>
                         </div>
                     </>) : (<>
                         <div className="title">

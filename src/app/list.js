@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Moment from 'moment';
 
-import logo from '../assets/images/cost-logo.png';
+import logo from '../assets/images/cost-logo.jpg';
 
 import api from '../services/api';
 
@@ -39,7 +39,7 @@ function List() {
                     <div className="select">
                         <select value={meeting} onChange={e => setMeeting(e.target.value)} required>
                             <option value="" defaultValue>Selecione</option>
-                            {meetings.map((item, key) => (<option key={key} value={item.id}>{item.descricao}</option>))}
+                            {meetings.map((item, key) => (<option key={key} value={item.id}>{item.description}</option>))}
                         </select>
                     </div>
                     <table>
@@ -54,8 +54,8 @@ function List() {
                             {result.map((item, i) => (
                                 <tr key={i}>
                                     <td>{item.id}</td>
-                                    <td>{Moment(item.dataConfirmacao).format('DD/MM/YYYY HH:mm:ss')}</td>
-                                    <td>{item.nome}</td>
+                                    <td>{Moment(item.confirmedAt).format('DD/MM/YYYY HH:mm:ss')}</td>
+                                    <td>{item.name}</td>
                                 </tr>
                             ))}
                         </tbody>
